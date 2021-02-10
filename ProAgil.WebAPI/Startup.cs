@@ -11,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using ProAgil.WebAPI.Data;
+using ProAgil.Repository;
 
 namespace ProAgil.WebAPI
 {
@@ -27,9 +27,11 @@ namespace ProAgil.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(
+            services.AddDbContext<ProAgilContext>(
                 x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))
                 );
+            
+            services.AddScoped<IProAgilRepository, ProAgilRepository>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             
             // Implementação do uso CORS
@@ -52,6 +54,8 @@ namespace ProAgil.WebAPI
             // Implementação das regras do CORS
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             
+            // Permite carregar imagens de diretório wwwroot, na api
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseMvc();
         }
