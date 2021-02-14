@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { Evento } from '../_models/Evento';
 import { EventoService } from '../_services/EventoService';
-
+import { ToastrService } from 'ngx-toastr';
 import { defineLocale, ptBrLocale } from 'ngx-bootstrap/chronos';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 defineLocale('pt-br', ptBrLocale);
@@ -44,6 +44,7 @@ export class EventosComponent implements OnInit {
             , private modalService: BsModalService
             , private formBuilder: FormBuilder
             , private localService: BsLocaleService
+            , private toastr: ToastrService
             ) {
     this.eventosFiltrados = [];
     this.eventos = [];
@@ -130,8 +131,10 @@ export class EventosComponent implements OnInit {
       () => {
         template.hide();
         this.getEventos();
+        this.toastr.success('Deletado com sucesso!');
       }, error => {
         console.log(error);
+        this.toastr.error( `Erro ao deletar: ${error}`);
       }
     );
   }
@@ -145,6 +148,7 @@ export class EventosComponent implements OnInit {
 
     // Correção do formato da data (campo DatePicker)
     this.registerForm.get('dataEvento')?.setValue(new Date(this.evento.dataEvento));
+
 /*     this.registerForm.get('tema')?.setValue(evento.tema);
     this.registerForm.get('local')?.setValue(evento.local);
     this.registerForm.get('dataEvento')?.setValue(evento.dataEvento + '.000Z');
@@ -157,41 +161,55 @@ export class EventosComponent implements OnInit {
   }
 
   salvarAlteracao(template: any): void{
+
+
+
     if (this.registerForm.valid){
       if (this.modoSalvar === 'post'){
+
         this.evento = Object.assign({}, this.registerForm.value);
-        this.eventoService.postEvento(this.evento).subscribe(
+
+        // Correção no formato de data ao inserir registro
+        const auxEvento = this.evento;
+        const dtAux = new Date(this.evento.dataEvento).toLocaleString('us-En');
+        auxEvento.dataEvento = new Date(dtAux);
+
+        this.eventoService.postEvento(auxEvento).subscribe(
           (novoEvento: any) => {
             console.log(novoEvento);
             template.hide();
             this.getEventos();
+            this.toastr.success('Inserido com sucesso!');
           }, error => {
             console.log(error);
+            this.toastr.error( `Erro ao inserir: ${error}`);
           }
         );
+
       }else{
+        this.registerForm.get('dataEvento')?.setValue(new Date(this.evento.dataEvento).toLocaleString('pt-Br'));
         this.evento = Object.assign({id: this.evento.id}, this.registerForm.value);
         this.eventoService.putEvento(this.evento).subscribe(
           () => {
             template.hide();
             this.getEventos();
+            this.toastr.success('Atualizado com sucesso!');
           }, error => {
             console.log(error);
+            this.toastr.error( `Erro ao editar: ${error}`);
           }
         );
+        this.registerForm.get('dataEvento')?.setValue(new Date(this.evento.dataEvento).toLocaleString('pt-Br'));
       }
-
     }
-
   }
 
   getEventos(): void{
     this.eventoService.getAllEventos().subscribe( (evt: Evento[]) => {
       this.eventos = evt;
       this.eventosFiltrados = this.eventos;
-      console.log(evt);
     }, error => {
-      console.log(error);
+      this.toastr.error( `Falha ao tentar carregar eventos: ${error}`);
     }
 
     );
