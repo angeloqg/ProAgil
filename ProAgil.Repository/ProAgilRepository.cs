@@ -45,6 +45,7 @@ namespace ProAgil.Repository
                 .Include(c => c.Lotes)
                 .Include(c => c.RedesSociais);
 
+                // Referência ManyToMany (Muitos para Muitos)
                 if(includePalestrantes){
                     query = query
                         .Include(pe => pe.PalestrantesEventos)
@@ -52,7 +53,7 @@ namespace ProAgil.Repository
                 }
 
                 query = query.AsNoTracking()
-                             .OrderByDescending(c => c.DataEvento);
+                             .OrderBy(c => c.Id);
 
             return await query.ToArrayAsync();
         }
@@ -63,6 +64,7 @@ namespace ProAgil.Repository
                 .Include(c => c.Lotes)
                 .Include(c => c.RedesSociais);
 
+                // Referência ManyToMany (Muitos para Muitos)
                 if(includePalestrantes){
                     query = query
                         .Include(pe => pe.PalestrantesEventos)
@@ -82,6 +84,7 @@ namespace ProAgil.Repository
                 .Include(c => c.Lotes)
                 .Include(c => c.RedesSociais);
 
+                // Referência ManyToMany (Muitos para Muitos)
                 if(includePalestrantes){
                     query = query
                         .Include(pe => pe.PalestrantesEventos)
@@ -102,6 +105,7 @@ namespace ProAgil.Repository
              IQueryable<Palestrante> query = _context.Palestrantes
                 .Include(c => c.RedesSociais);
 
+                // Referência ManyToMany (Muitos para Muitos)
                 if(includeEventos){
                     query = query
                         .Include(pe => pe.EventosPalestrantes)
@@ -120,6 +124,7 @@ namespace ProAgil.Repository
              IQueryable<Palestrante> query = _context.Palestrantes
                 .Include(c => c.RedesSociais);
 
+                // Referência ManyToMany (Muitos para Muitos)
                 if(includeEventos){
                     query = query
                         .Include(pe => pe.EventosPalestrantes)
