@@ -147,6 +147,6 @@ namespace ProAgil.WebAPI.Controllers
 
 /* **Nota: Observar o uso da annotation '[ApiController]', esse recurso está presente na versão mais atual
  *         da Net.Core, ele evita ter que decorrar a passagem de parametros nos métodos com
- *         [FromBody], no caso de POST e [Fromheader], no caso de GET, além de não haver a necessidade 
+ *         [FromBody], no caso de POST e [FromHeader], no caso de GET, além de não haver a necessidade 
  *         de ter que validar o Model com 'ModelState.IsValid', para validar se o Model está correto,
  *         a exemplo, se estiver usando decorrator no Model, validar as informações enviadas*/
