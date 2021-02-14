@@ -162,8 +162,6 @@ export class EventosComponent implements OnInit {
 
   salvarAlteracao(template: any): void{
 
-
-
     if (this.registerForm.valid){
       if (this.modoSalvar === 'post'){
 
