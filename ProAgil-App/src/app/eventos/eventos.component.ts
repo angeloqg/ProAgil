@@ -182,7 +182,7 @@ export class EventosComponent implements OnInit {
 
       // Antes de gravar os dados no banco, salva primeiro o arquivo
       this.eventoService.postUpload(this.file, nomeArquivo[2]).subscribe(
-        () =>{
+        () => {
           this.dataAtual = new Date().getMilliseconds().toString();
           this.getEventos();
         }
@@ -192,14 +192,12 @@ export class EventosComponent implements OnInit {
 
       // Antes de gravar os dados no banco, salva primeiro o arquivo
       this.eventoService.postUpload(this.file, this.fileNameToUpdate).subscribe(
-        () =>{
+        () => {
           this.dataAtual = new Date().getMilliseconds().toString();
           this.getEventos();
         }
       );
     }
-
-
   }
 
   salvarAlteracao(template: any): void {
