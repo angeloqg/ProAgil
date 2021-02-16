@@ -8,7 +8,7 @@ import { Evento } from '../_models/Evento';
 })
 export class EventoService {
 
-    baseURL = 'http://localhost:5000/api/evento';
+  baseURL = 'http://localhost:5000/api/evento';
 
   constructor(private http: HttpClient) { }
 
@@ -33,5 +33,20 @@ export class EventoService {
 
   deleteEvento(id: number): Observable<Evento[]>{
     return this.http.delete<Evento[]>(`${this.baseURL}/${id}`);
+  }
+
+  // tslint:disable-next-line:ban-types
+  postUpload(file: any, name: string): Observable <Object>{
+
+    // arquivo para upload
+    const fileUpload = file[0] as File;
+
+    // criação de um formdata
+    const formData = new FormData();
+
+    // atribuir o arquivo / nome do arquivo ao formdata
+    formData.append('file', fileUpload, name);
+
+    return this.http.post(`${this.baseURL}/upload`, formData);
   }
 }

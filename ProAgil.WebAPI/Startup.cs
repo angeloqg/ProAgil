@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProAgil.Repository;
@@ -60,8 +63,19 @@ namespace ProAgil.WebAPI
             // Implementação das regras do CORS
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             
-            // Permite carregar imagens de diretório wwwroot, na api
+            // Permite carregar imagens a partir do diretório wwwroot (default), na api
             app.UseStaticFiles();
+            // ==> Exemplo de acesso: http://localhost:5000/img/img1.jpg
+
+
+            // Ajuste para carregar imagens a partir de um diretório específico na API 
+            app.UseStaticFiles(new StaticFileOptions() {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),@"Resources")),
+                RequestPath = new PathString("/Resources")
+            
+            });
+            // ==> Exemplo de acesso: http://localhost:5000/resources/img/img1.jpg
+
             app.UseHttpsRedirection();
             app.UseMvc();
         }

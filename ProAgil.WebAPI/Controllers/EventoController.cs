@@ -1,5 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
+
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -141,6 +145,46 @@ namespace ProAgil.WebAPI.Controllers
             }
 
             return BadRequest();
+        }
+
+        // GET api/values
+        [HttpPost("Upload")]
+        public IActionResult Upload()
+        {
+            try
+            {
+                // Obtem o arquivo a partir da primeira posição do arquivo
+                var file = Request.Form.Files[0];
+
+                // Obtem o nome da pasta a partir da combinação do path e da pasta
+                var folderName = Path.Combine("Resources", "Images");
+
+                // Obtem o diretório aonde os arquivos serão salvos
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+                // Verifica se o arquivo existe
+                if (file.Length > 0)
+                {
+
+                    // Obtem o nome do arquivo
+                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName;
+
+                    // Obtem o caminho completo aonde o arquivo será salvo
+                    var fullPath = Path.Combine(pathToSave, fileName.Replace("\"", " ").Trim());
+
+                    // Copia o arquivo para stream
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                }
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Erro ao tentar realizar upload!");
+            }
         }
     }
 }
