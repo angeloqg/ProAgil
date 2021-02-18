@@ -47,8 +47,9 @@ namespace ProAgil.WebAPI
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { 
-                    Title = "ProAgil WebAPI", 
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "ProAgil WebAPI",
                     Version = "v1",
                     Description = "Api de gestão de eventos",
                     Contact = new OpenApiContact

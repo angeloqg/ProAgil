@@ -3,12 +3,12 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>xmlDocument\ProAgil.WebAPI.xml</DocumentationFile>
+<!--  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
     <OutputPath></OutputPath>
     <WarningLevel>5</WarningLevel>
     <NoWarn>1701;1702;1591</NoWarn>
-  </PropertyGroup>
+  </PropertyGroup>-->
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="4.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
