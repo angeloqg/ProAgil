@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProAgil.Domain.Identity;
 using ProAgil.Repository;
@@ -62,6 +65,21 @@ namespace ProAgil.WebAPI
             builder.AddRoleManager<RoleManager<Role>>();
             builder.AddSignInManager<SignInManager<User>>();
 
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+                
+                opt =>
+                {
+                    opt.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                }            
+            );
+
             services.AddMvc( 
                 opt =>{
                     var policy = new AuthorizationPolicyBuilder()
@@ -73,7 +91,6 @@ namespace ProAgil.WebAPI
              .AddJsonOptions( opt => opt.SerializerSettings.ReferenceLoopHandling = 
              Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             // Injeção de Dependência: Repository => Repository
             services.AddScoped<IProAgilRepository, ProAgilRepository>();
 
