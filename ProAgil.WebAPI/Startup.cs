@@ -4,11 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +20,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using ProAgil.Domain.Identity;
 using ProAgil.Repository;
 
 namespace ProAgil.WebAPI
@@ -36,13 +41,45 @@ namespace ProAgil.WebAPI
                 x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))
                 );
             
+
+            // Ajustes das configurações de password do usuário
+            IdentityBuilder builder = services.AddIdentityCore<User>( 
+                
+                opt => 
+                {
+                    opt.Password.RequireDigit = false;
+                    opt.Password.RequireNonAlphanumeric = false;
+                    opt.Password.RequireLowercase = false;
+                    opt.Password.RequireUppercase = false;
+                    opt.Password.RequiredLength = 4;
+                }
+
+            );
+
+            builder = new IdentityBuilder(builder.UserType, typeof(Role), builder.Services);
+            builder.AddEntityFrameworkStores<ProAgilContext>();
+            builder.AddRoleValidator<RoleValidator<Role>>();
+            builder.AddRoleManager<RoleManager<Role>>();
+            builder.AddSignInManager<SignInManager<User>>();
+
+            services.AddMvc( 
+                opt =>{
+                    var policy = new AuthorizationPolicyBuilder()
+                                .RequireAuthenticatedUser()
+                                .Build();
+                    opt.Filters.Add(new AuthorizeFilter(policy));
+                }
+            ).SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+             .AddJsonOptions( opt => opt.SerializerSettings.ReferenceLoopHandling = 
+             Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             // Injeção de Dependência: Repository => Repository
             services.AddScoped<IProAgilRepository, ProAgilRepository>();
 
             // Mapeamento de dados (AutoMapper)
             services.AddAutoMapper();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
