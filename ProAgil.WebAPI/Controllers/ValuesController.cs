@@ -21,6 +21,10 @@ namespace ProAgil.WebAPI.Controllers
 
         }
 
+        /// <summary>
+        /// Método de teste
+        /// </summary>
+        /// <returns></returns>
         // GET api/values
         [HttpGet]
         public async Task<IActionResult> Get()

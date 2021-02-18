@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using ProAgil.Repository;
 
 namespace ProAgil.WebAPI
@@ -42,7 +43,22 @@ namespace ProAgil.WebAPI
             services.AddAutoMapper();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { 
+                    Title = "ProAgil WebAPI", 
+                    Version = "v1",
+                    Description = "Api de gestão de eventos",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Angelo Quintarelli Greenhalgh",
+                        Email = "angeloqg@hotmail.com"
+                    }
+                });
+            });
+
             // Implementação do uso CORS
             services.AddCors();
         }
@@ -75,6 +91,17 @@ namespace ProAgil.WebAPI
             
             });
             // ==> Exemplo de acesso: http://localhost:5000/resources/img/img1.jpg
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProAgil WebAPI V1");
+                c.RoutePrefix = String.Empty;
+            });
 
             app.UseHttpsRedirection();
             app.UseMvc();
