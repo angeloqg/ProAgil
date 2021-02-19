@@ -97,7 +97,6 @@ namespace ProAgil.WebAPI
             // Mapeamento de dados (AutoMapper)
             services.AddAutoMapper();
 
-
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
@@ -130,6 +129,9 @@ namespace ProAgil.WebAPI
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            // Habilita a autenticação do usuário na API
+            app.UseAuthentication();
 
             // Implementação das regras do CORS
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
