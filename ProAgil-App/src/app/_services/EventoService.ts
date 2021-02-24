@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { environmentProd } from 'src/environments/environment.prod';
 import { Evento } from '../_models/Evento';
 
 @Injectable({
@@ -9,8 +10,7 @@ import { Evento } from '../_models/Evento';
 })
 export class EventoService {
 
-  // baseURL = 'http://localhost:5000/api/evento';
-  baseURL = environment.apiUrl + 'api/evento';
+  baseURL = isDevMode() ? environment.apiUrl + 'api/evento' : environmentProd.apiUrl + 'api/evento';
 
   constructor(private http: HttpClient) {
 

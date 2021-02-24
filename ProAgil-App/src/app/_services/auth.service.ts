@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { environmentProd } from 'src/environments/environment.prod';
 import { Login } from '../_models/Login';
 import { LoginResponse } from '../_models/LoginResponse';
 import { User } from '../_models/User';
@@ -15,8 +16,7 @@ export class AuthService {
 
   // baseURL = 'http://localhost:5000/api/User/';
 
-  baseURL = environment.apiUrl + 'api/User/';
-
+  baseURL = isDevMode() ? environment.apiUrl + 'api/User/' : environmentProd.apiUrl + 'api/User/';
   jwtHelper = new JwtHelperService();
 
   token: any;

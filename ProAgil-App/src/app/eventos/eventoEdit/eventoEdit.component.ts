@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, isDevMode, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { defineLocale, ptBrLocale } from 'ngx-bootstrap/chronos';
@@ -8,6 +8,7 @@ import { Evento } from 'src/app/_models/Evento';
 import { EventoService } from 'src/app/_services/EventoService';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { environmentProd } from 'src/environments/environment.prod';
 defineLocale('pt-br', ptBrLocale);
 
 @Component({
@@ -18,6 +19,8 @@ defineLocale('pt-br', ptBrLocale);
 export class EventoEditComponent implements OnInit {
 
   titulo = 'Editar Evento';
+
+  baseURL = isDevMode() ? environment.apiUrl : environmentProd.apiUrl;
 
   evento: Evento;
 
@@ -66,7 +69,7 @@ export class EventoEditComponent implements OnInit {
         this.evento = Object.assign({}, evt);
         this.fileNameToUpdate = this.evento.imagemUrl.toString();
 
-        this.evento.imagemUrl = `${environment.apiUrl}resources/images/${ this.evento.imagemUrl }?_ts=${this.dataAtual}`;
+        this.evento.imagemUrl = `${this.baseURL}resources/images/${ this.evento.imagemUrl }?_ts=${this.dataAtual}`;
         this.imagemURL = this.evento.imagemUrl;
         this.registerForm.patchValue(this.evento);
 
@@ -204,7 +207,7 @@ export class EventoEditComponent implements OnInit {
       this.eventoService.postUpload(this.file, this.evento.imagemUrl).subscribe(
         () => {
           this.dataAtual = new Date().getMilliseconds().toString();
-          this.evento.imagemUrl = `${environment.apiUrl}resources/images/${ this.evento.imagemUrl }?_ts=${this.dataAtual}`;
+          this.evento.imagemUrl = `${this.baseURL}resources/images/${ this.evento.imagemUrl }?_ts=${this.dataAtual}`;
         }
       );
     }
