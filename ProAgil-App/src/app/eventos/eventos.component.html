@@ -21,7 +21,6 @@
     </button>
   </div>
 </div>
-
 <table class="table table-striped">
   <thead class="thead-light">
     <tr>
@@ -36,7 +35,7 @@
       <th style="vertical-align: middle">Data</th>
       <th style="vertical-align: middle">Qtd Pessoas</th>
       <th style="vertical-align: middle">Lote</th>
-      <th style="vertical-align: middle">Opções</th>
+      <th style="vertical-align: middle" colSpan="2" class="text-center">Opções</th>
     </tr>
   </thead>
   <tbody *ngIf="eventos && eventos.length">
@@ -45,7 +44,7 @@
         <div *ngIf="evento.imagemUrl.length">
           <img
             *ngIf="mostrarImagem"
-            src="http://localhost:5000/resources/images/{{ evento.imagemUrl }}?_ts={{dataAtual}}"
+            src="{{urlImage}}resources/images/{{ evento.imagemUrl }}?_ts={{dataAtual}}"
             [style.width.px]="imagemLargura"
             [style.margin.px]="imagemMargem"
           />
@@ -77,6 +76,11 @@
         >
           <i class="fa fa-eraser"></i>
         </button>
+      </td>
+      <td>
+        <a [routerLink]="['/evento', evento.id ,'edit']" tooltip="Edição detalhada" class="btn btn-sm btn-warning">
+          <i class="fa fa-edit"></i>
+        </a>
       </td>
     </tr>
   </tbody>

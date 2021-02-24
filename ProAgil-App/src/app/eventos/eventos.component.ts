@@ -6,6 +6,7 @@ import { EventoService } from '../_services/EventoService';
 import { ToastrService } from 'ngx-toastr';
 import { defineLocale, ptBrLocale } from 'ngx-bootstrap/chronos';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { environment } from 'src/environments/environment';
 defineLocale('pt-br', ptBrLocale);
 
 @Component({
@@ -15,20 +16,13 @@ defineLocale('pt-br', ptBrLocale);
 })
 export class EventosComponent implements OnInit {
   titulo = 'Eventos';
-
+  urlImage = environment.apiUrl;
   eventosFiltrados: Evento[];
   eventos: Evento[];
-  private evt: any;
+  private evento: Evento;
 
   fileNameToUpdate: string;
   dataAtual: string;
-
-  public get evento(): Evento {
-    return this.evt;
-  }
-  public set evento(value: Evento) {
-    this.evt = value;
-  }
 
   imagemLargura = 50;
   imagemMargem = 2;
@@ -58,11 +52,10 @@ export class EventosComponent implements OnInit {
     this.eventosFiltrados = [];
     this.eventos = [];
     this.fileNameToUpdate = '';
-    this.dataAtual = '';
-
+    this.evento = new Evento();
     this.modoSalvar = '';
     this.localService.use('pt-br');
-
+    this.dataAtual = new Date().getMilliseconds().toString();
     this.registerForm = formBuilder.group({
       tema: [
         '',
@@ -191,7 +184,7 @@ export class EventosComponent implements OnInit {
       this.evento.imagemUrl = this.fileNameToUpdate;
 
       // Antes de gravar os dados no banco, salva primeiro o arquivo
-      this.eventoService.postUpload(this.file, this.fileNameToUpdate).subscribe(
+      this.eventoService.postUpload(this.file, this.evento.imagemUrl).subscribe(
         () => {
           this.dataAtual = new Date().getMilliseconds().toString();
           this.getEventos();
@@ -214,13 +207,11 @@ export class EventosComponent implements OnInit {
 
         this.eventoService.postEvento(auxEvento).subscribe(
           (novoEvento: any) => {
-            console.log(novoEvento);
             template.hide();
             this.getEventos();
             this.toastr.success('Inserido com sucesso!');
           },
           (error) => {
-            console.log(error);
             this.toastr.error(`Erro ao inserir: ${error}`);
           }
         );
@@ -290,14 +281,12 @@ export class EventosComponent implements OnInit {
   }
 
   onFileChange(event: any): void {
-    console.log(event);
 
     const reader = new FileReader();
 
     // Validando se o arquivo existe / tem tamanho maior que zero
     if (event.target.files && event.target.files.length) {
       this.file = event.target.files;
-      console.log(this.file);
     }
   }
 }

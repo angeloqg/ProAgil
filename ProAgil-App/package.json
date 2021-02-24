@@ -23,6 +23,8 @@
     "@fortawesome/fontawesome-free": "^5.15.2",
     "bootstrap": "^4.6.0",
     "ngx-bootstrap": "^6.2.0",
+    "ngx-currency": "^2.5.2",
+    "ngx-mask": "^11.1.4",
     "ngx-toastr": "^13.2.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",

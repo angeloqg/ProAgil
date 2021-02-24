@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { Evento } from '../_models/Evento';
 
 @Injectable({
@@ -8,7 +9,8 @@ import { Evento } from '../_models/Evento';
 })
 export class EventoService {
 
-  baseURL = 'http://localhost:5000/api/evento';
+  // baseURL = 'http://localhost:5000/api/evento';
+  baseURL = environment.apiUrl + 'api/evento';
 
   constructor(private http: HttpClient) {
 
@@ -23,11 +25,11 @@ export class EventoService {
     return this.http.get<Evento[]>(`${this.baseURL}/getByTema/${tema}`);
   }
 
-  getEventoById(id: number): Observable<Evento[]>{
-    return this.http.get<Evento[]>(`${this.baseURL}/${id}`);
+  getEventoById(id: number): Observable<Evento>{
+    return this.http.get<Evento>(`${this.baseURL}/${id}`);
   }
 
-   postEvento(evento: Evento): Observable <Evento>{
+  postEvento(evento: Evento): Observable <Evento>{
     return this.http.post<Evento>(this.baseURL, evento);
   }
 

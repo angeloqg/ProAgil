@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 import { Login } from '../_models/Login';
 import { LoginResponse } from '../_models/LoginResponse';
 import { User } from '../_models/User';
@@ -12,7 +13,9 @@ import { User } from '../_models/User';
 })
 export class AuthService {
 
-  baseURL = 'http://localhost:5000/api/User/';
+  // baseURL = 'http://localhost:5000/api/User/';
+
+  baseURL = environment.apiUrl + 'api/User/';
 
   jwtHelper = new JwtHelperService();
 
