@@ -40,10 +40,14 @@ namespace ProAgil.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Configuração para executar o SQL Server
             services.AddDbContext<ProAgilContext>(
-                x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))
+                x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
                 );
-            
+            // Configuração para executar o SQL Lite
+/*             services.AddDbContext<ProAgilContext>(
+                x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))
+                ); */
 
             // Ajustes das configurações de password do usuário
             IdentityBuilder builder = services.AddIdentityCore<User>( 
